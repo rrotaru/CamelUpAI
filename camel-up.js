@@ -66,7 +66,7 @@ function CamelUpGame() {
 
     /* rolls the associated die and sets its value */
     function rollFunc() {
-        var value = rand(1,6);
+        var value = rand(1,3);
         this.value = value;
         return value;
     }
