@@ -13,6 +13,7 @@ function CamelUpGame() {
     var dice = [];
     var cards = [];
     var pyramid = [];
+    var rolled = [];
     var ui = CamelUpUI();
 
     /* Public object/module exposed to users */
@@ -22,6 +23,7 @@ function CamelUpGame() {
         dice: dice,
         cards: cards,
         pyramid: pyramid,
+        rolled: rolled,
         startGame: rollAllAndPlace,
         playRound: rollSingleRandom,
         input: inputState,
@@ -57,6 +59,14 @@ function CamelUpGame() {
 
     function getDieFromPyramid() {
         return game.pyramid.splice(rand(0, game.pyramid.length-1), 1)[0];
+    }
+
+    function clearRolled() {
+        game.rolled = [];
+    }
+
+    function addRolled(dieRolled) {
+        game.rolled = game.rolled.concat(dieRolled);
     }
 
     /* returns a random integer between n and m*/
@@ -190,6 +200,7 @@ function CamelUpGame() {
 
         if (game.pyramid.length < 1) {
             fillPyramid();
+            clearRolled();
         } 
         var die = getDieFromPyramid();
         die.roll();
@@ -198,9 +209,19 @@ function CamelUpGame() {
 
         calculateStandings(); 
         updateCamelsUI();
-        var coords = ui.getDiceCoords(1)[0];
-        ui.drawDie(die.color, coords.x, coords.y, die.value);
+        
+        //var coords = ui.getDiceCoords(1)[0];
+        var coords = ui.getDiceCoords(game.dice.length);
+        addRolled(die);
+        //console.log("Rolled Die:" + game.rolled);
+
+        for (var i=0; i < game.rolled.length; i++) {
+        //ui.drawDie(die.color, coords.x, coords.y, die.value);
+        ui.drawDie(game.rolled[i].color, coords[i].x, coords[i].y, game.rolled[i].value);
+        }
         prettyPrintBoard();
+
+        
     }
 
     function inputState(newcamels, newdice, newtrack, newcards) {
